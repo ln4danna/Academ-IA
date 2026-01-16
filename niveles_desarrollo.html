@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libro Interactivo - IA</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Tu hoja principal -->
+  <link rel="stylesheet" href="semillero.css">
+
+<style>
+/* === Mantiene el estilo original del navbar sobre fondos 3D === */
+nav.navbar {
+  position: relative;
+  z-index: 5;
+  background: rgba(10, 10, 25, 0.85); /* oscuro con leve transparencia */
+  backdrop-filter: blur(6px); /* efecto vidrio elegante */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.7rem 5%;
+}
+
+/* Enlaces y marca */
+.navbar .navbar-brand,
+.navbar .nav-link {
+  position: relative;
+  color: #fff9f9 !important;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover */
+.navbar .navbar-brand:hover,
+.navbar .nav-link:hover {
+  color: #8e44ad !important;
+  transform: scale(1.05);
+}
+
+/* Subrayado animado */
+.navbar .nav-link::after,
+.navbar .navbar-brand::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 2px;
+  background-color: #8e44ad;
+  transition: width 0.3s ease-in-out;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .navbar-brand:hover::after {
+  width: 100%;
+}
+
+/* Botón menú móvil */
+.navbar-toggler {
+  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+</style>
+</head>
+
+<body class="libro-activo">
+   
+<nav class="navbar navbar-expand-sm bg-light">
+  <div class="container-fluid">
+  <a class="navbar-brand" href="index.html" id="coloraca">Academ-IA</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+    </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav ms-auto">
+  <li class="nav-item">
+  <a class="nav-link" href="mapa_conceptos.html">Conceptos</a>
+</li>
+  <li class="nav-item">
+  <a class="nav-link" href="#explora.html">Explora y juega</a>
+</li>
+ <li class="nav-item">
+  <a class="nav-link" href="referencias.html">Referencias</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+
+  <!-- Fondo 3D -->
+  <div id="bg-scene"></div>
+
+
+<div class="book-container">
+  <!-- LIBRO -->
+  <div>
+    <div class="book" id="book">
+      <!-- Portada -->
+      <div class="book-page">
+        <img src="ia1.jpg" alt="Imagen IA">
+      </div>
+
+
+      <!-- IA Débil -->
+      <div class="book-page">
+        <h2>IA Débil (Narrow AI)</h2>
+        <h3>Características</h3>
+        <ul>
+          <li>Se centra en una sola tarea.</li>
+          <li>No razona fuera de su programación.</li>
+          <li>Es la IA que usamos hoy en día.</li>
+        </ul>
+      </div>
+      <div class="book-page">
+        <h2>IA Débil (Narrow AI)</h2>
+        <h3>Ejemplos</h3>
+        <ul>
+          <li>Siri o Alexa.</li>
+          <li>Recomendaciones de Netflix y Spotify.</li>
+          <li>Filtros de spam.</li>
+        </ul>
+      </div>
+
+
+      <!-- IA General -->
+      <div class="book-page">
+        <h2>IA General (AGI)</h2>
+        <h3>Características</h3>
+        <ul>
+          <li>Puede razonar y aprender en distintos contextos.</li>
+          <li>Se asemeja a la inteligencia humana.</li>
+          <li>Aún en fase de investigación.</li>
+        </ul>
+      </div>
+      <div class="book-page">
+        <h2>IA General (AGI)</h2>
+        <h3>Ejemplos</h3>
+        <ul>
+          <li>Modelos como DeepMind Gato.</li>
+          <li>Robots humanoides en desarrollo.</li>
+          <li>No existen aplicaciones reales aún.</li>
+        </ul>
+      </div>
+
+
+      <!-- IA Superinteligente -->
+      <div class="book-page">
+        <h2>IA Superinteligente (ASI)</h2>
+        <h3>Características</h3>
+        <ul>
+          <li>Supera la inteligencia humana.</li>
+          <li>Capaz de crear nuevas tecnologías.</li>
+          <li>Es hipotética y genera debates éticos.</li>
+        </ul>
+      </div>
+      <div class="book-page">
+        <h2>IA Superinteligente (ASI)</h2>
+        <h3>Ejemplos</h3>
+        <ul>
+          <li>No existen casos reales.</li>
+          <li>Películas: Ex Machina, Yo Robot, Her.</li>
+          <li>Debates sobre la “singularidad tecnológica”.</li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="book-controls">
+      <button onclick="prevPage()">Anterior</button>
+      <button onclick="nextPage()">Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- TÍTULO Y TEXTO -->
+  <div class="book-title-container">
+    <h1 id="dynamicTitle">Niveles de desarrollo de la inteligencia artificial (IA)</h1>
+    <p id="dynamicInfo">Explora los distintos niveles de evolución de la inteligencia artificial, desde los sistemas más básicos hasta las formas más avanzadas y autónomas.</p>
+  </div>
+</div>
+
+
+<!-- === JS === -->
+<script>
+let currentPage = 1;
+const pages = document.querySelectorAll('.book-page');
+const totalPages = pages.length;
+
+
+const titles = [
+  "Niveles de desarrollo de la inteligencia artificial (IA)", // portada
+  "IA Débil (Narrow AI)", "IA Débil (Narrow AI)",
+  "IA General (AGI)", "IA General (AGI)",
+  "IA Superinteligente (ASI)", "IA Superinteligente (ASI)"
+];
+
+
+const infos = [
+  "Explora los distintos niveles de evolución de la inteligencia artificial, desde los sistemas más básicos hasta las formas más avanzadas y autónomas.",
+  "La IA Débil se centra en tareas específicas sin conciencia propia, funcionando dentro de límites definidos.",
+  "Ejemplos de IA Débil incluyen asistentes virtuales, filtros de spam o sistemas de recomendación.",
+  "La IA General busca razonar y aprender en cualquier contexto, con habilidades similares a las humanas.",
+  "Ejemplos de IA General son proyectos experimentales con razonamiento lógico o comprensión profunda.",
+  "La IA Superinteligente supera las capacidades humanas, anticipando necesidades y tomando decisiones autónomas.",
+  "Ejemplos de IA Superinteligente incluyen teorías futuristas o sistemas de predicción avanzada."
+];
+
+
+function updateBook() {
+  pages.forEach((page, index) => {
+    if (index < currentPage - 1) {
+      page.style.transform = 'rotateY(-180deg)';
+      page.style.zIndex = totalPages - index - 1;
+    } else {
+      page.style.transform = 'rotateY(0deg)';
+      page.style.zIndex = totalPages - index;
+    }
+  });
+
+
+  document.getElementById("dynamicTitle").textContent = titles[currentPage - 1];
+  document.getElementById("dynamicInfo").textContent = infos[currentPage - 1];
+}
+
+
+function nextPage() {
+  if (currentPage < totalPages) {
+    currentPage++;
+    updateBook();
+  }
+}
+
+
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    updateBook();
+  }
+}
+
+
+updateBook();
+</script>
+
+
+<!-- Fondo 3D -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script>
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.z = 50;
+
+
+const renderer = new THREE.WebGLRenderer({ alpha:true, antialias:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.getElementById("bg-scene").appendChild(renderer.domElement);
+
+
+const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambient);
+
+
+const particleCount = 8500;
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+  const radius = 40 + Math.random() * 25;
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.random() * Math.PI;
+  positions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+  positions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+  positions[i*3+2] = radius * Math.cos(phi);
+}
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+
+const material = new THREE.PointsMaterial({
+  color: 0x9b5de5,
+  size: 0.12,
+  transparent: true,
+  opacity: 0.8
+});
+const particles = new THREE.Points(geometry, material);
+scene.add(particles);
+
+
+function animate() {
+  requestAnimationFrame(animate);
+  particles.rotation.y += 0.002;
+  particles.rotation.x += 0.001;
+  renderer.render(scene, camera);
+}
+animate();
+
+
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+
+</body>
+</html>

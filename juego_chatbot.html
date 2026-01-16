@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Chatbot Educativo - ACADEM-IA</title>
+<link rel="stylesheet" href="semillero.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+
+ <body>
+<nav class="navbar navbar-expand-sm bg-light">
+  <div class="container-fluid">
+  <a class="navbar-brand" href="index.html" id="coloraca">Academ-IA</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+    </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav ms-auto">
+  <li class="nav-item">
+  <a class="nav-link" href="mapa_conceptos.html">Conceptos</a>
+</li>
+  <li class="nav-item">
+  <a class="nav-link" href="explora.html">Explora y juega</a>
+</li>
+ <li class="nav-item">
+  <a class="nav-link" href="referencias.html">Referencias</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+ 
+  <div class="juego-chatbot">
+    <div class="chat-container">
+      <div class="chat-header">🤖 ACADEBot - Tu guía sobre IA</div>
+      <div class="chat-box" id="chat-box">
+        <div class="message bot">
+          ¡Hola! 👋 Soy <b>ACADEBot</b>, tu asistente sobre Inteligencia Artificial.<br>
+          Puedes preguntarme cosas como:
+          <div class="suggestions">
+            <button onclick="sendQuestion('¿Qué es la inteligencia artificial?')">¿Qué es la IA?</button>
+            <button onclick="sendQuestion('¿Qué es el machine learning?')">Machine Learning</button>
+            <button onclick="sendQuestion('¿Qué tipos de IA existen?')">Tipos de IA</button>
+            <button onclick="sendQuestion('¿Dónde se usa la IA?')">Usos de la IA</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Escribe tu pregunta..." />
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+
+
+const chatBox = document.getElementById('chat-box');
+
+
+const userInput = document.getElementById('user-input');
+
+
+ 
+
+
+const responses = {
+
+
+  "qué es la inteligencia artificial": "La Inteligencia Artificial es una rama de la informática que busca crear sistemas capaces de aprender, razonar y resolver problemas como lo haría un ser humano.",
+
+
+  "qué es el machine learning": "El Machine Learning o aprendizaje automático es una subrama de la IA que permite a las máquinas aprender de los datos sin ser programadas explícitamente.",
+
+
+  "qué diferencia hay entre ia y machine learning": "La IA es el campo general que busca simular la inteligencia humana. El Machine Learning es una técnica específica dentro de la IA que usa datos para aprender patrones.",
+
+
+  "qué son las redes neuronales": "Son modelos inspirados en el cerebro humano que se utilizan para reconocer patrones y resolver tareas complejas como el reconocimiento de voz o imágenes.",
+
+
+  "qué es el deep learning": "El Deep Learning es una forma avanzada de Machine Learning que usa redes neuronales con muchas capas para analizar datos complejos, como imágenes o texto.",
+
+
+  "dónde se usa la ia": "La IA se usa en asistentes virtuales, reconocimiento facial, diagnósticos médicos, conducción autónoma, marketing, y muchas otras áreas.",
+
+
+  "qué tipos de ia existen": "Existen tres tipos: IA débil (limitada a tareas específicas), IA general (con inteligencia humana completa, aún teórica), e IA superinteligente (más allá del humano, también teórica)."
+
+
+};
+
+
+ 
+
+
+function sendMessage() {
+
+
+  const message = userInput.value.trim();
+
+
+  if (message === '') return;
+
+
+  displayMessage(message, 'user');
+
+
+  userInput.value = '';
+
+
+  setTimeout(() => botResponse(message), 500);
+
+
+}
+
+
+ 
+
+
+function sendQuestion(question) {
+
+
+  displayMessage(question, 'user');
+
+
+  setTimeout(() => botResponse(question), 500);
+
+
+}
+
+
+ 
+
+
+function displayMessage(message, sender) {
+
+
+  const msgDiv = document.createElement('div');
+
+
+  msgDiv.classList.add('message', sender);
+
+
+  msgDiv.innerHTML = message;
+
+
+  chatBox.appendChild(msgDiv);
+
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+
+}
+
+
+ 
+
+
+function botResponse(message) {
+
+
+  const lowerMsg = message.toLowerCase();
+
+
+  let response = "Esa pregunta no la conozco todavía 😅. Intenta preguntarme algo sobre Inteligencia Artificial o aprendizaje automático.";
+
+
+  for (let key in responses) {
+
+
+    if (lowerMsg.includes(key)) {
+
+
+      response = responses[key];
+
+
+      break;
+
+
+    }
+
+
+  }
+
+
+  displayMessage(response, 'bot');
+
+
+}
+
+
+</script>
+
+
+ 
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IA-Bot - AcademIA (Demo)</title>
+  
+  <style>
+  /* ----- Variables de color ----- */
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --accent:#7c3aed; /* morado */
+    --muted:#9aa5b1;
+    --me:#1f2937;
+    --bot:#0b1220;
+    --bubble-me:#7c3aed;
+    --bubble-bot:#111827;
+  }
+
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+
+  body{
+    margin:0;
+    background: linear-gradient(180deg,#071029 0%, #071723 100%);
+    color:#e6eef6;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  .app {
+    width:100%;
+    max-width:920px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:0;
+    min-height:600px;
+  }
+
+  /* ----- Chat principal ----- */
+  .chat {
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  header.app-header{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .logo {
+    width:52px;height:52px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),#4c1d95);
+    display:flex;align-items:center;justify-content:center;font-weight:700;
+    box-shadow: 0 4px 18px rgba(92,40,210,0.18);
+  }
+  .title h1{margin:0;font-size:18px}
+  .title p{margin:0;color:var(--muted);font-size:13px}
+
+  .messages {
+    flex:1;
+    overflow:auto;
+    padding:12px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    border-radius:12px;
+  }
+
+  .msg {display:flex;gap:10px;margin-bottom:12px;align-items:flex-end}
+  .msg.bot {justify-content:flex-start}
+  .msg.me {justify-content:flex-end}
+  .bubble{
+    max-width:74%;
+    padding:10px 14px;
+    border-radius:14px;
+    line-height:1.3;
+    box-shadow: 0 6px 20px rgba(2,6,23,0.45);
+    font-size:14px;
+  }
+  .bot .bubble{background:linear-gradient(180deg,var(--bubble-bot), #0b1227); color:#dbeafe;}
+  .me .bubble{background:linear-gradient(180deg,var(--bubble-me), #5b21b6); color:white; border:1px solid rgba(255,255,255,0.04)}
+  .meta{font-size:12px;color:var(--muted);margin-top:6px}
+
+  .controls{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    margin-top:6px;
+  }
+  input[type="text"]{
+    flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+    background:rgba(255,255,255,0.02); color:inherit; outline:none;
+    font-size:14px;
+  }
+  button{
+    background:var(--accent);
+    color:white;padding:10px 12px;border-radius:10px;border:0;font-weight:600;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(124,58,237,0.18);
+  }
+  button.ghost{
+    background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);box-shadow:none;font-weight:500;
+  }
+
+  /* ----- Panel derecho: memoria + enseñar ----- */
+  .side {
+    padding:18px;
+    border-left:1px solid rgba(255,255,255,0.02);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    display:flex;flex-direction:column;gap:12px;
+  }
+
+  .card{
+    background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
+  }
+
+  .mem-list{max-height:300px;overflow:auto;padding:6px;display:flex;flex-direction:column;gap:6px}
+  /* si quieres ocultar visualmente la lista sin borrar datos */
+  /* .mem-list { display: none; } */
+
+  .mem-item{padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);border:1px dashed rgba(255,255,255,0.02);font-size:13px}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  textarea,input[type="text"].small{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
+
+  .footer-note{font-size:13px;color:var(--muted);margin-top:6px;text-align:center}
+
+  /* responsive */
+  @media (max-width:880px){
+    .app{grid-template-columns:1fr;min-height:720px}
+    .side{order:2}
+
+                                 
+    .mem-list { display: none; } 
+
+  }
+
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Chat IA Demo">
+    <div class="chat">
+      <header class="app-header">
+        <div class="logo">IA</div>
+        <div class="title">
+          <h1>IA-Bot • AcademIA</h1>
+          <p>Habla con el bot y enséñale cosas — guarda lo aprendido en tu navegador</p>
+        </div>
+      </header>
+
+      <main class="messages" id="messages" aria-live="polite"></main>
+
+      <div class="controls">
+        <input id="inputText" type="text" placeholder="Escribe: pregunta o /help..." aria-label="mensaje"/>
+        <button id="sendBtn">Enviar</button>
+        <button id="teachToggle" class="ghost" title="Enseñar nuevo dato">Enseñar</button>
+      </div>
+
+      <div class="footer-note">Comandos: <code>/help</code> <code>/list</code> <code>/clear</code></div>
+    </div>
+
+    <aside class="side">
+      <div class="card">
+        <strong>Memoria del bot</strong>
+        <p style="margin:6px 0;color:var(--muted);font-size:13px">Aquí ves lo que IA-Bot recuerda.</p>
+        <div class="mem-list" id="memList"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="exportBtn" class="ghost">Exportar</button>
+          <button id="importBtn" class="ghost">Importar</button>
+          <button id="clearMem" class="ghost">Borrar todo</button>
+        </div>
+      </div>
+
+      <div class="card" id="teachCard" style="display:none">
+        <strong>Enseñar al bot</strong>
+        <p style="margin:6px 0;color:var(--muted);font-size:13px">Escribe una pregunta y su respuesta.</p>
+        <label>Pregunta</label>
+        <input id="teachQ" class="small" type="text" placeholder="¿Qué es ...?"/>
+        <label>Respuesta</label>
+        <textarea id="teachA" rows="3" placeholder="Respuesta que quieres que recuerde"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="teachSave">Guardar</button>
+          <button id="teachCancel" class="ghost">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>Sugerencia / Tutorial rápido</strong>
+        <ol style="margin:8px 0 0 16px;color:var(--muted);font-size:13px">
+          <li>Escribe una pregunta normal («¿Quién fue Alan Turing?»).</li>
+          <li>Para enseñar: haz clic en <em>Enseñar</em>, completa Pregunta + Respuesta y guarda.</li>
+          <li>Prueba <code>/list</code> para ver la memoria o <code>/clear</code> para borrarla.</li>
+        </ol>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    /* ---------- lógica del bot ---------- */
+    const DEFAULT_MEMORY = [
+      {q:"¿qué es la ia?", a:"La inteligencia artificial (IA) es la simulación de procesos de inteligencia humana por parte de máquinas."},
+      {q:"¿quién fue alan turing?", a:"Alan Turing fue un matemático y criptógrafo británico, clave en el desarrollo de la computación moderna."},
+      {q:"¿qué es un gato?", a:"Un gato es un animal doméstico, peludo, que maúlla y suele ser independiente."},
+      {q:"hola", a:"¡Hola! ¿En qué quieres ayudarme hoy? Puedes enseñarme cosas usando 'Enseñar'."},
+    ];
+
+    function loadMemory(){
+      try{
+        const raw = localStorage.getItem('iaBotMemory');
+        if(!raw) return DEFAULT_MEMORY.slice();
+        const parsed = JSON.parse(raw);
+        if(!Array.isArray(parsed)) throw new Error("Formato inválido");
+        return parsed;
+      }catch(e){
+        console.warn("Error leyendo memoria, usando predeterminada:", e);
+        return DEFAULT_MEMORY.slice();
+      }
+    }
+    function saveMemory(mem){ localStorage.setItem('iaBotMemory', JSON.stringify(mem)); }
+
+    const messagesEl = document.getElementById('messages');
+    const inputText = document.getElementById('inputText');
+    const sendBtn = document.getElementById('sendBtn');
+    const teachToggle = document.getElementById('teachToggle');
+    const teachCard = document.getElementById('teachCard');
+    const teachQ = document.getElementById('teachQ');
+    const teachA = document.getElementById('teachA');
+    const teachSave = document.getElementById('teachSave');
+    const teachCancel = document.getElementById('teachCancel');
+    const memList = document.getElementById('memList');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const clearMem = document.getElementById('clearMem');
+
+    let memory = loadMemory();
+
+    function renderMemory(){
+      memList.innerHTML = '';
+      if(memory.length === 0){
+        memList.innerHTML = '<div style="color:var(--muted);font-size:13px">Sin entradas en memoria.</div>';
+        return;
+      }
+      memory.forEach((m, i) => {
+        const d = document.createElement('div');
+        d.className = 'mem-item';
+        d.innerHTML = `<strong>Q:</strong> ${escapeHtml(m.q)}<br/><small style="color:var(--muted)"><strong>A:</strong> ${escapeHtml(m.a)}</small>`;
+        d.title = "Haz clic para eliminar esta entrada";
+        d.style.cursor = 'pointer';
+        d.addEventListener('click', ()=> {
+          if(confirm('Eliminar esta entrada de la memoria?')) {
+            memory.splice(i,1); saveMemory(memory); renderMemory();
+            addBotMessage('He borrado esa entrada de mi memoria.');
+          }
+        });
+        memList.appendChild(d);
+      })
+    }
+
+    function addUserMessage(text){
+      const wrap = document.createElement('div'); wrap.className='msg me';
+      wrap.innerHTML = `<div class="bubble">${escapeHtml(text)}</div>`;
+      messagesEl.appendChild(wrap); messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    function addBotMessage(text){
+      const wrap = document.createElement('div'); wrap.className='msg bot';
+      wrap.innerHTML = `<div class="bubble">${escapeHtml(text)}</div>`;
+      messagesEl.appendChild(wrap); messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function findAnswer(input){
+      const q = input.trim().toLowerCase();
+      for(const m of memory){ if(m.q.trim().toLowerCase() === q) return {answer: m.a, source:'memory'}; }
+      const sorted = memory.slice().sort((a,b)=> b.q.length - a.q.length);
+      for(const m of sorted){ if(q.includes(m.q.trim().toLowerCase())) return {answer: m.a, source:'memory'}; }
+      const words = q.split(/\W+/).filter(Boolean);
+      for(const m of memory){
+        const mq = m.q.toLowerCase();
+        for(const w of words){ if(w.length>2 && mq.includes(w)) return {answer:m.a, source:'memory'}; }
+      }
+      return null;
+    }
+
+    function processInput(raw){
+      const text = raw.trim(); if(!text) return;
+      addUserMessage(text);
+
+      if(text === '/help'){ addBotMessage("Comandos: /help, /list, /clear. O haz click en 'Enseñar'."); return; }
+      if(text === '/list'){ addBotMessage("Mira la lista de memoria a la derecha. Puedes eliminar entradas desde allí."); return; }
+      if(text === '/clear'){ if(confirm("¿Borrar toda la memoria?")){memory=[];saveMemory(memory);renderMemory();addBotMessage("Memoria borrada 😶");}else{addBotMessage("Operación cancelada.");} return; }
+
+      const lower = text.toLowerCase();
+      if(['hola','buenas','buenas tardes','buen dia','buen día'].includes(lower)) { addBotMessage("¡Hola! Soy IA-Bot. Usa 'Enseñar' para agregar información."); return; }
+
+      const found = findAnswer(text);
+      if(found){ addBotMessage(found.answer + "  — (lo aprendí/recuerdo)"); return; }
+
+      addBotMessage("No sé la respuesta todavía. Haz clic en 'Enseñar' y agrégala para que la recuerde.");
+    }
+
+    teachToggle.addEventListener('click', ()=>{ teachCard.style.display = teachCard.style.display==='none'?'block':'none'; if(teachCard.style.display==='block') teachQ.focus(); });
+    teachCancel.addEventListener('click', ()=> { teachCard.style.display='none'; });
+    teachSave.addEventListener('click', ()=>{
+      const q = teachQ.value.trim(), a = teachA.value.trim();
+      if(!q || !a){ alert('Completa pregunta y respuesta.'); return; }
+      memory.unshift({q:q,a:a}); saveMemory(memory); renderMemory();
+      teachQ.value=''; teachA.value=''; teachCard.style.display='none';
+      addBotMessage(`¡Gracias! He aprendido: "${q}"`);
+    });
+
+    sendBtn.addEventListener('click', ()=> { processInput(inputText.value); inputText.value=''; inputText.focus(); });
+    inputText.addEventListener('keydown', (e)=> { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendBtn.click(); } });
+
+    exportBtn.addEventListener('click', ()=>{
+      const data = JSON.stringify(memory,null,2); 
+      const blob = new Blob([data], {type:'application/json'}); 
+      const url = URL.createObjectURL(blob); 
+      const a = document.createElement('a'); a.href=url; a.download='iaBotMemory.json'; a.click(); 
+      URL.revokeObjectURL(url);
+    });
+
+    importBtn.addEventListener('click', ()=>{
+      const f=document.createElement('input'); f.type='file'; f.accept='application/json';
+      f.addEventListener('change', ()=> {
+        const file=f.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          try{
+            const parsed = JSON.parse(e.target.result);
+            if(!Array.isArray(parsed)) throw new Error('Formato inválido');
+            memory = parsed; saveMemory(memory); renderMemory(); addBotMessage('Importé la memoria con éxito.');
+          }catch(err){ alert('Archivo no válido: '+err.message); }
+        }
+        reader.readAsText(file);
+      });
+      f.click();
+    });
+
+    clearMem.addEventListener('click', ()=> { if(confirm('¿Eliminar todo lo aprendido?')){memory=[];saveMemory(memory);renderMemory();addBotMessage('Memoria eliminada.');} });
+
+    function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
+
+    (function init(){ renderMemory(); addBotMessage("¡Hola! Pregúntame algo o usa 'Enseñar'. Escribe /help para comandos."); })();
+  </script>
+</body>
+</html>

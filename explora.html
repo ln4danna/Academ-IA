@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Explora y Juega | AcadémIA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="semillero.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-light">
+  <div class="container-fluid">
+  <a class="navbar-brand" href="index.html">Academ-IA</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+    </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav ms-auto">
+  <li class="nav-item">
+  <a class="nav-link" href="mapa_conceptos.html">Conceptos</a>
+</li>
+  <li class="nav-item">
+  <a class="nav-link" href="#explora.html">Explora y juega</a>
+</li>
+ <li class="nav-item">
+  <a class="nav-link" href="referencias.html">Referencias</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+ 
+ <main class="explora-hero" id="exploraHero">
+
+
+  <!-- video inicial -->
+  <video autoplay muted loop playsinline id="bgVideo" class="bg-video">
+  <source src="videofrutas.mp4" type="video/mp4">
+  </video>
+
+
+  <section class="hero-left">
+    <h1 id="heroTitle">Clasificador de Frutas</h1>
+    <p id="heroDesc"> Esta actividad te enseña cómo las inteligencias artificiales clasifican objetos. A través de ejemplos simples, comprenderás que una IA necesita ver muchos ejemplos para “aprender” correctamente.</p>
+    <a id="heroBtn" href="juego_fruta.html" target="_blank" class="btn-jugar">¡Jugar ahora!</a>
+  </section>
+
+
+  <!-- CARRUSEL -->
+  <section class="carousel-spotlight-section">
+  <div class="carousel-spotlight">
+  <button class="cs-btn cs-prev" aria-label="Anterior">‹</button>
+
+
+<div class="cs-track" id="csTrack">
+       
+  <!--  CARD 1 -->
+   <article class="cs-card active" data-index="0" data-video="frutasvideo.mp4">
+   <h3 class="cs-title">Clasificador de Frutas</h3>
+   <p class="cs-desc"> En esta actividad podrás ponerte en el lugar de una inteligencia artificial que aprende a reconocer imágenes.</p>
+   </article>
+
+
+     <!--  CARD 2 -->
+   <article class="cs-card" data-index="1" data-video="videomanos.mp4">
+    <h3 class="cs-title">IA vs Humano</h3>
+    <p class="cs-desc">En esta actividad te retamos a poner a prueba tu intuición. Verás una serie de frases o imágenes, y tu misión será adivinar si fueron creadas por una persona (humano) o por una inteligencia artificial (IA). </p>
+     </article>
+
+
+    <!--  CARD 3 -->
+    <article class="cs-card" data-index="2" data-video="videorobot.mp4">
+    <h3 class="cs-title">ACADEBot</h3>
+    <p class="cs-desc">Este chatbot interactivo permite a los usuarios aprender de forma sencilla los conceptos fundamentales de la Inteligencia Artificial.</p>
+    </article>
+    </div>
+
+
+<button class="cs-btn cs-next" aria-label="Siguiente">›</button>
+  </div>
+  </section>
+</main>
+</body>
+</html>
+
+
+<script>
+const cards = document.querySelectorAll(".cs-card");
+const nextBtn = document.querySelector(".cs-next");
+const prevBtn = document.querySelector(".cs-prev");
+const bgVideo = document.getElementById("bgVideo");
+
+
+const heroTitle = document.getElementById("heroTitle");
+const heroDesc = document.getElementById("heroDesc");
+const heroBtn = document.getElementById("heroBtn");
+
+
+let activeIndex = 0;
+
+
+const juegos = [
+  {
+    titulo: "Clasificador de Frutas",
+    descripcion: "Entrena una pequeña IA arrastrando frutas y observa cómo aprende a clasificar.",
+    enlace: "juego_fruta.html",
+    video: "frutasvideo.mp4"
+  },
+  {
+    titulo: "¿IA o Humano?",
+    descripcion: "Intenta adivinar si lo que ves fue creado por una persona o por una IA.",
+    enlace: "juego_humano.html",
+    video: "videomanos.mp4"
+  },
+  {
+    titulo: "Chatbot Educativo",
+    descripcion: "Habla con ACADEBot y aprende sobre Inteligencia Artificial de forma interactiva.",
+    enlace: "juego_chatbot.html",
+    video: "videorobot.mp4"
+  }
+];
+
+
+function updateActiveCard(index) {
+  activeIndex = (index + cards.length) % cards.length;
+
+
+  cards.forEach((card, i) => {
+    card.classList.remove("active", "left", "right", "hidden");
+    if (i === activeIndex) {
+      card.classList.add("active");
+    } else if (i === (activeIndex - 1 + cards.length) % cards.length) {
+      card.classList.add("left");
+    } else if (i === (activeIndex + 1) % cards.length) {
+      card.classList.add("right");
+    } else {
+      card.classList.add("hidden");
+    }
+  });
+
+
+  // Cambiar video y texto
+  const juego = juegos[activeIndex];
+  bgVideo.querySelector("source").src = juego.video;
+  bgVideo.load();
+  bgVideo.play();
+
+
+  heroTitle.textContent = juego.titulo;
+  heroDesc.textContent = juego.descripcion;
+  heroBtn.href = juego.enlace;
+}
+
+
+// Flechas
+nextBtn.addEventListener("click", () => {
+  updateActiveCard(activeIndex + 1);
+});
+prevBtn.addEventListener("click", () => {
+  updateActiveCard(activeIndex - 1);
+});
+
+
+// Clic directo en tarjeta
+cards.forEach((card, i) => {
+  card.addEventListener("click", () => updateActiveCard(i));
+});
+
+
+// Inicializar
+updateActiveCard(0);
+</script>
+
+

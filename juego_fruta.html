@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clasificador de Frutas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="semillero.css">
+</head>
+
+
+<body>
+  
+<nav class="navbar navbar-expand-sm bg-light">
+  <div class="container-fluid">
+  <a class="navbar-brand" href="index.html" id="coloraca">Academ-IA</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+    </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav ms-auto">
+  <li class="nav-item">
+  <a class="nav-link" href="mapa_conceptos.html">Conceptos</a>
+</li>
+  <li class="nav-item">
+  <a class="nav-link" href="explora.html">Explora y juega</a>
+</li>
+ <li class="nav-item">
+  <a class="nav-link" href="referencias.html">Referencias</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+
+
+  <div class="juego-frutas">
+    <h1>Bienvenido al <span>Clasificador de Frutas</span></h1>
+    <p>En esta actividad podrás ponerte en el lugar de una inteligencia artificial que aprende a reconocer imágenes. Primero, selecciona una imagen de fruta (por ejemplo, una manzana o una banana 🍎🍌). Luego, haz clic en el botón para que la IA analice la imagen y te diga qué cree que es. </p>
+
+
+    <div class="frutas">
+    <div class="fruta" draggable="true" ondragstart="arrastrar(event)" id="manzana">🍎</div>
+    <div class="fruta" draggable="true" ondragstart="arrastrar(event)" id="banana">🍌</div>
+    </div>
+
+
+    <h2>Zona de Entrenamiento</h2>
+    <div class="zona" ondragover="permitirDrop(event)" ondrop="soltar(event)">
+      Suelta aquí para entrenar
+    </div>
+
+
+    <p id="entrenamiento"></p>
+
+
+    <button class="btn" onclick="probar()">Probar IA</button>
+    <div id="resultado"></div>
+  </div>
+
+
+  <script>
+
+
+    let entrenamiento = { manzana: 0, banana: 0 };
+    function arrastrar(ev) {
+      ev.dataTransfer.setData("fruta", ev.target.id);
+    }
+
+
+    function permitirDrop(ev) {
+
+
+      ev.preventDefault();
+
+
+    }
+
+
+    function soltar(ev) {
+
+
+      ev.preventDefault();
+
+
+      let fruta = ev.dataTransfer.getData("fruta");
+
+
+      entrenamiento[fruta]++;
+
+
+      document.getElementById("entrenamiento").innerText =
+
+
+        `Entrenamiento: 🍎 ${entrenamiento.manzana} | 🍌 ${entrenamiento.banana}`;
+
+
+    }
+
+
+    function probar() {
+
+
+      if (entrenamiento.manzana > entrenamiento.banana) {
+
+
+        document.getElementById("resultado").innerText =
+
+
+          "La IA cree que es una 🍎 Manzana";
+
+
+      } else if (entrenamiento.banana > entrenamiento.manzana) {
+
+
+        document.getElementById("resultado").innerText =
+
+
+          "La IA cree que es una 🍌 Banana";
+
+
+      } else {
+        document.getElementById("resultado").innerText =
+         "La IA está confundida... Entrénala más.";
+      }
+
+
+    }
+  </script>
+</body>
+</html>
+
+
