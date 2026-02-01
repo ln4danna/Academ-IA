@@ -1,3 +1,6 @@
+## 🌐 Demo
+👉 https://tu-proyecto.netlify.app
+
 AcademIA – Interactive Web Project
 is an interactive educational web project designed to explain the fundamentals of Artificial Intelligence in a clear, simple, and accessible way for non-technical audiences.
 The project aims to reduce the knowledge gap around AI by combining theoretical explanations with interactive content, real-world examples, and a friendly user experience.
